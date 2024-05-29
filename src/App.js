@@ -1,23 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from './pages/Home';
+import SavedLists from './pages/SavedLists';
 
 function App() {
+  const [savedLists, setSavedLists] = useState([]);
+
+  const saveList = (listName, movies) => {
+    const newList = { listName, movies };
+    setSavedLists([...savedLists, newList]);
+  };
+
+  const deleteList = (index) => {
+    const updatedLists = [...savedLists];
+    updatedLists.splice(index, 1);
+    setSavedLists(updatedLists);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Router>
+        <Routes>
+          <Route path='/' element={<Home saveList={saveList} />} />
+          <Route
+            path='/saved'
+            element={<SavedLists savedLists={savedLists} onDeleteList={deleteList} />}
+          />
+        </Routes>
+      </Router>
     </div>
   );
 }
